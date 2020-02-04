@@ -1,0 +1,23 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - ./src:/var/www:cached
+      - ./logs/nginx/:/var/log/nginx
+      - ./nginx/sites/:/etc/nginx/sites-available
+    ports:
+      - "80:80"
+    depends_on:
+      - php-fpm
+  php-fpm:
+    build:
+      context: ./php7.3
+      dockerfile: Dockerfile
+    volumes:
+      - ./php7.3/php.ini:/usr/local/etc/php/php.ini
+      - ./php7.3/tnsnames.ora:/usr/local/instantclient/tnsnames.ora
+      - ./src:/var/www:cached
+    expose:
+      - "9000"
